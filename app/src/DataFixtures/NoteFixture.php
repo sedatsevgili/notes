@@ -8,15 +8,19 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class NoteFixture extends Fixture
 {
 
     private Generator $faker;
+    private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct()
+
+    public function __construct(UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->faker = Factory::create();
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
     public function load(ObjectManager $manager): void
@@ -38,7 +42,7 @@ class NoteFixture extends Fixture
             $user = new User();
             $email = $this->faker->email();
             $user->setEmail($email)
-                ->setPassword($email)
+                ->setPassword($this->userPasswordHasher->hashPassword($user, $email))
                 ->setRoles(['ROLE_USER']);
             $manager->persist($user);
             $users[] = $user;
