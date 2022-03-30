@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Note;
 use App\Form\NoteType;
 use App\Repository\NoteRepository;
+use App\Security\Voter\NoteVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,7 @@ class NoteController extends AbstractController
     public function index(NoteRepository $noteRepository): Response
     {
         return $this->render('note/index.html.twig', [
-            'notes' => $noteRepository->findAll(),
+            'notes' => $noteRepository->findBy(['user' => $this->getUser()]),
         ]);
     }
 
@@ -44,6 +45,8 @@ class NoteController extends AbstractController
     #[Route('/{id}', name: 'app_note_show', methods: ['GET'])]
     public function show(Note $note): Response
     {
+        $this->denyAccessUnlessGranted(NoteVoter::VIEW, $note);
+
         return $this->render('note/show.html.twig', [
             'note' => $note,
         ]);
@@ -52,6 +55,8 @@ class NoteController extends AbstractController
     #[Route('/{id}/edit', name: 'app_note_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Note $note, NoteRepository $noteRepository): Response
     {
+        $this->denyAccessUnlessGranted(NoteVoter::EDIT, $note);
+
         $form = $this->createForm(NoteType::class, $note);
         $form->handleRequest($request);
 
@@ -69,6 +74,7 @@ class NoteController extends AbstractController
     #[Route('/{id}', name: 'app_note_delete', methods: ['POST'])]
     public function delete(Request $request, Note $note, NoteRepository $noteRepository): Response
     {
+        $this->denyAccessUnlessGranted(NoteVoter::EDIT, $note);
 
         if ($this->isCsrfTokenValid('delete'.$note->getId(), $request->request->get('_token'))) {
             $noteRepository->remove($note);
