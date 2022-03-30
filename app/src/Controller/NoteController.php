@@ -7,23 +7,27 @@ use App\Form\NoteType;
 use App\Repository\NoteRepository;
 use App\Security\Voter\NoteVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/note')]
+#[Route('/api/notes')]
 class NoteController extends AbstractController
 {
     #[Route('/', name: 'app_note_index', methods: ['GET'])]
     public function index(NoteRepository $noteRepository): Response
     {
-        return $this->render('note/index.html.twig', [
-            'notes' => $noteRepository->findBy(['user' => $this->getUser()]),
+        /*return new JsonResponse([
+            'notes' => $noteRepository->findBy(['user' => $this->getUser()])
+        ]);*/
+        return new JsonResponse([
+            'notes' => $noteRepository->findAll()
         ]);
     }
 
-    #[Route('/new', name: 'app_note_new', methods: ['GET', 'POST'])]
+    #[Route('/', name: 'app_note_new', methods: ['POST'])]
     public function new(Request $request, NoteRepository $noteRepository): Response
     {
         $note = new Note();
@@ -32,54 +36,48 @@ class NoteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $note->setUser($this->getUser());
-            $noteRepository->add($note);
-            return $this->redirectToRoute('app_note_index', [], Response::HTTP_SEE_OTHER);
+            $noteRepository->save($note);
+            return new JsonResponse(['note' => $note], Response::HTTP_CREATED);
         }
 
-        return $this->renderForm('note/new.html.twig', [
-            'note' => $note,
-            'form' => $form,
-        ]);
+        return new JsonResponse([
+            'errors' => $form->getErrors()
+        ], Response::HTTP_BAD_REQUEST);
     }
 
     #[Route('/{id}', name: 'app_note_show', methods: ['GET'])]
     public function show(Note $note): Response
     {
-        $this->denyAccessUnlessGranted(NoteVoter::VIEW, $note);
+        //$this->denyAccessUnlessGranted(NoteVoter::VIEW, $note);
 
-        return $this->render('note/show.html.twig', [
-            'note' => $note,
-        ]);
+        return new JsonResponse(['note' => $note]);
     }
 
-    #[Route('/{id}/edit', name: 'app_note_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}', name: 'app_note_edit', methods: ['PUT'])]
     public function edit(Request $request, Note $note, NoteRepository $noteRepository): Response
     {
-        $this->denyAccessUnlessGranted(NoteVoter::EDIT, $note);
+        //$this->denyAccessUnlessGranted(NoteVoter::EDIT, $note);
 
         $form = $this->createForm(NoteType::class, $note);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $noteRepository->add($note);
-            return $this->redirectToRoute('app_note_index', [], Response::HTTP_SEE_OTHER);
+            $noteRepository->save($note);
+            return new JsonResponse(['note' => $note], Response::HTTP_OK);
         }
 
-        return $this->renderForm('note/edit.html.twig', [
-            'note' => $note,
-            'form' => $form,
-        ]);
+        return new JsonResponse([
+            'errors' => $form->getErrors()
+        ], Response::HTTP_BAD_REQUEST);
     }
 
-    #[Route('/{id}', name: 'app_note_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_note_delete', methods: ['DELETE'])]
     public function delete(Request $request, Note $note, NoteRepository $noteRepository): Response
     {
         $this->denyAccessUnlessGranted(NoteVoter::EDIT, $note);
 
-        if ($this->isCsrfTokenValid('delete'.$note->getId(), $request->request->get('_token'))) {
-            $noteRepository->remove($note);
-        }
+        $noteRepository->remove($note);
 
-        return $this->redirectToRoute('app_note_index', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse([], Response::HTTP_OK);
     }
 }
