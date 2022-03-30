@@ -9,3 +9,7 @@
  * Run `doctrine-compose exec database /bin/bash` to login to the db container.
  * Run `mysql -u root -psecret notes` to login to the mysql
  * Run `use notes`
+
+# References
+ * https://www.twilio.com/blog/get-started-docker-symfony
+ * 
