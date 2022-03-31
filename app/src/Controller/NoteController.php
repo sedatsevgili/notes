@@ -19,11 +19,8 @@ class NoteController extends AbstractController
     #[Route('/', name: 'app_note_index', methods: ['GET'])]
     public function index(NoteRepository $noteRepository): Response
     {
-        /*return new JsonResponse([
-            'notes' => $noteRepository->findBy(['user' => $this->getUser()])
-        ]);*/
         return new JsonResponse([
-            'notes' => $noteRepository->findAll()
+            'notes' => $noteRepository->findBy(['user' => $this->getUser()])
         ]);
     }
 
@@ -48,7 +45,7 @@ class NoteController extends AbstractController
     #[Route('/{id}', name: 'app_note_show', methods: ['GET'])]
     public function show(Note $note): Response
     {
-        //$this->denyAccessUnlessGranted(NoteVoter::VIEW, $note);
+        $this->denyAccessUnlessGranted(NoteVoter::VIEW, $note);
 
         return new JsonResponse(['note' => $note]);
     }
@@ -56,7 +53,7 @@ class NoteController extends AbstractController
     #[Route('/{id}', name: 'app_note_edit', methods: ['PUT'])]
     public function edit(Request $request, Note $note, NoteRepository $noteRepository): Response
     {
-        //$this->denyAccessUnlessGranted(NoteVoter::EDIT, $note);
+        $this->denyAccessUnlessGranted(NoteVoter::EDIT, $note);
 
         $form = $this->createForm(NoteType::class, $note);
         $form->handleRequest($request);
