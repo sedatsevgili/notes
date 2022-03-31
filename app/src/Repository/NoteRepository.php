@@ -25,7 +25,7 @@ class NoteRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Note $entity, bool $flush = true): void
+    public function save(Note $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
