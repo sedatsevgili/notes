@@ -17,10 +17,8 @@
         <li>Your template at <code><a href="{{ '/var/www/notes/templates/index/index.html.twig'|file_link(0) }}">templates/index/index.html.twig</a></code></li>
     </ul>
 
-    {% verbatim %}
     <div id="app">
-
+      <router-view></router-view>
     </div>
-    {% endverbatim %}
 </div>
 {% endblock %}
