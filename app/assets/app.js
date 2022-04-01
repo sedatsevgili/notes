@@ -7,17 +7,19 @@
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
-
+import './styles/sb-admin-2.min.css';
 
 
 import { createApp } from 'vue'
 import {createRouter, createWebHistory} from 'vue-router'
 import Index from './Index';
 import Login from './auth/Login';
+import Register from './auth/Register';
 
 const routes = [
-    {path: '/', component: Index},
-    {path: '/auth/login', component: Login}
+    {path: '/', component: Login},
+    {path: '/auth/login', component: Login},
+    {path: '/auth/register', component: Register}
 ]
 
 const router = createRouter({
