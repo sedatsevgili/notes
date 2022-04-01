@@ -59,7 +59,7 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
@@ -75,4 +75,10 @@ Encore
     //.autoProvidejQuery()
 ;
 
-module.exports = Encore.getWebpackConfig();
+// Use polling instead of inotify
+const config = Encore.getWebpackConfig();
+config.watchOptions = {
+    poll: true
+}
+
+module.exports = config;
