@@ -50,14 +50,22 @@
 import Layout from '../layout/Default'
 import { ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 const store = useStore()
+const router = useRouter()
 
-const email = ref('')
-const password = ref('')
+const email = ref('iokon@lindgren.com')
+const password = ref('iokon@lindgren.com')
 
 const login = async () => {
-  await store.dispatch('login',  {email: email.value, password: password.value})
+  try {
+    await store.dispatch('login',  {email: email.value, password: password.value})
+    router.push({path: '/'})
+  } catch (e) {
+    console.error(e)
+  }
+
 }
 
 </script>

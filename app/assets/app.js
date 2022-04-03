@@ -18,7 +18,7 @@ import Login from './auth/Login';
 import Register from './auth/Register';
 
 const routes = [
-    {path: '/', component: Login},
+    {path: '/', component: Index, meta: {requiresAuth: true}},
     {path: '/auth/login', component: Login},
     {path: '/auth/register', component: Register}
 ]
@@ -26,6 +26,18 @@ const routes = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        if (store.getters.token) {
+            next()
+            return
+        }
+        next('/auth/login')
+    } else {
+        next()
+    }
 })
 
 const app = createApp({})

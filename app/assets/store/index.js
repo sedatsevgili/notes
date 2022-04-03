@@ -70,6 +70,11 @@ const store = createStore({
                 ...state.notes.slice(noteIndex + 1)
             ])
         }
+    },
+    getters: {
+        token: (state) => state.auth.token,
+        notes: (state) => state.notes,
+        noteToUpdate: (state) => state.noteToUpdate
     }
 })
 
