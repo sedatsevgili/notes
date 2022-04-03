@@ -1,21 +1,51 @@
 <template>
+  <DefaultLayout>
+    <template v-slot:content>
 
+      <h1 class="h3 mb-2 text-gray-800">Notes</h1>
+
+      <!-- DataTales Example -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Your Notes</h6>
+        </div>
+        <div class="card-body" v-if="notes">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+              <tr>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="note in notes">
+                <td>{{note.title}}</td>
+                <td>{{note.content}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </template>
+  </DefaultLayout>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useStore } from 'vuex'
 
-// reactive state
-const count = ref(0)
+import DefaultLayout from './layout/Default'
 
-// functions that mutate state and trigger updates
-function increment() {
-  count.value++
-}
+const store = useStore()
+
+const notes = computed(() => store.getters.notes)
 
 // lifecycle hooks
 onMounted(() => {
-  console.log(`The initial count is ${count.value}.`)
+  store.dispatch('getNotes')
 })
 </script>
 
