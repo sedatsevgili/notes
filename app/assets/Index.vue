@@ -1,5 +1,5 @@
 <template>
-  <DefaultLayout>
+  <DefaultLayout @logout-clicked="logout">
     <template v-slot:content>
 
       <h1 class="h3 mb-2 text-gray-800">Notes</h1>
@@ -23,6 +23,7 @@
               <tr v-for="note in notes">
                 <td>{{note.title}}</td>
                 <td>{{note.content}}</td>
+                <td></td>
               </tr>
               </tbody>
             </table>
@@ -36,12 +37,19 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 import DefaultLayout from './layout/Default'
 
 const store = useStore()
+const router = useRouter()
 
 const notes = computed(() => store.getters.notes)
+
+const logout = async () => {
+  store.dispatch('logout')
+  router.push({path: '/auth/login'})
+}
 
 // lifecycle hooks
 onMounted(() => {

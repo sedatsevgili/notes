@@ -41,6 +41,11 @@ const store = createStore({
             const token = await register(email, password)
             commit('setToken', token)
         },
+        async logout({commit}) {
+            commit('clearNotes')
+            commit('clearNoteToUpdate')
+            commit('clearToken')
+        },
         async getNotes({commit, state}) {
             const notes = await getNotes(state.auth.token)
             commit('setNotes', notes)

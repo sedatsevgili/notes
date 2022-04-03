@@ -1,6 +1,6 @@
 <template>
   <div id="wrapper">
-    <Sidebar />
+    <Sidebar @logout-clicked="$emit('logout-clicked')" />
     <div id="content-wrapper" class="d-flex flex-column">
       <div id="content">
         <Topbar />
