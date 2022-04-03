@@ -24,7 +24,11 @@
               <tr v-for="note in notes">
                 <td>{{note.title}}</td>
                 <td>{{note.content}}</td>
-                <td></td>
+                <td>
+                  <router-link :to="{name: 'EditNote', params: {noteId: note.id}}">
+                    <i class="fas fa-fw fa-edit"></i>
+                  </router-link>
+                </td>
               </tr>
               </tbody>
             </table>

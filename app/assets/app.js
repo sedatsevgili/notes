@@ -17,12 +17,14 @@ import Index from './Index';
 import Login from './auth/Login';
 import Register from './auth/Register';
 import AddNote from './notes/Add';
+import EditNote from './notes/Edit';
 
 const routes = [
     {path: '/', component: Index, meta: {requiresAuth: true}},
     {path: '/auth/login', component: Login},
     {path: '/auth/register', component: Register},
-    {path: '/notes/add', component: AddNote, meta: {requiresAuth: false}}
+    {path: '/notes/add', component: AddNote, meta: {requiresAuth: true}},
+    {name:'EditNote', path: '/notes/update/:noteId', component: EditNote, meta: {requiresAuth: true}}
 ]
 
 const router = createRouter({

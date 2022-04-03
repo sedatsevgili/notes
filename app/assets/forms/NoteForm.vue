@@ -16,7 +16,7 @@
                   v-model="content">
         </textarea>
       </div>
-      <a @click="save({title, content})" class="btn btn-primary btn-user btn-block">
+      <a @click="save({title: titleInForm, content: contentInForm})" class="btn btn-primary btn-user btn-block">
         {{saveButtonLabel}}
       </a>
     </form>
@@ -24,13 +24,16 @@
 </template>
 
 <script setup>
+import { toRefs, defineProps } from 'vue'
+
 const props = defineProps({
   formHeaderText: String,
   saveButtonLabel: String,
-  save: Function
+  save: Function,
+  title: String,
+  content: String
 })
-import { toRefs } from 'vue'
 
-const { title, content } = toRefs(props)
+const { title: titleInForm, content: contentInForm } = toRefs(props)
 
 </script>
