@@ -12,6 +12,7 @@ import './styles/sb-admin-2.min.css';
 
 import { createApp } from 'vue'
 import {createRouter, createWebHistory} from 'vue-router'
+import store from './store';
 import Index from './Index';
 import Login from './auth/Login';
 import Register from './auth/Register';
@@ -29,4 +30,5 @@ const router = createRouter({
 
 const app = createApp({})
 app.use(router)
+app.use(store)
 app.mount('#app')

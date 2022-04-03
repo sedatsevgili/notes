@@ -17,15 +17,15 @@
                   </div>
                   <form class="user">
                     <div class="form-group">
-                      <input type="email" class="form-control form-control-user"
+                      <input type="email" v-model="email" class="form-control form-control-user"
                              id="exampleInputEmail" aria-describedby="emailHelp"
                              placeholder="Enter Email Address...">
                     </div>
                     <div class="form-group">
-                      <input type="password" class="form-control form-control-user"
+                      <input type="password" v-model="password" class="form-control form-control-user"
                              id="exampleInputPassword" placeholder="Password">
                     </div>
-                    <a href="#" class="btn btn-primary btn-user btn-block">
+                    <a href="#" @click="login" class="btn btn-primary btn-user btn-block">
                       Login
                     </a>
                   </form>
@@ -49,19 +49,17 @@
 <script setup>
 import Layout from '../layout/Default'
 import { ref, onMounted } from 'vue'
+import { useStore } from 'vuex'
 
-// reactive state
-const count = ref(0)
+const store = useStore()
 
-// functions that mutate state and trigger updates
-function increment() {
-  count.value++
+const email = ref('')
+const password = ref('')
+
+const login = async () => {
+  await store.dispatch('login',  {email: email.value, password: password.value})
 }
 
-// lifecycle hooks
-onMounted(() => {
-  console.log(`The initial count is ${count.value}.`)
-})
 </script>
 
 <style scoped>

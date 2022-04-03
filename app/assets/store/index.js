@@ -13,19 +13,19 @@ const store = createStore({
         }
     },
     mutations: {
-        setToken(state, {token}) {
+        setToken(state, token) {
             state.auth.token = token;
         },
         clearToken(state) {
             state.auth.token = null
         },
-        setNotes(state, {notes}) {
+        setNotes(state, notes) {
             state.notes = notes
         },
         clearNotes(state) {
             state.notes = []
         },
-        setNoteToUpdate(state, {note}) {
+        setNoteToUpdate(state, note) {
             state.noteToUpdate = note
         },
         clearNoteToUpdate(state) {

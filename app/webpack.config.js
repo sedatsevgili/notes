@@ -22,7 +22,8 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .enableVueLoader(() => {}, {
-        version: 3
+        version: 3,
+        // runtimeCompilerBuild: false
     })
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
@@ -75,10 +76,5 @@ Encore
     //.autoProvidejQuery()
 ;
 
-// Use polling instead of inotify
-const config = Encore.getWebpackConfig();
-config.watchOptions = {
-    poll: true
-}
+module.exports = Encore.getWebpackConfig();
 
-module.exports = config;
