@@ -2,6 +2,11 @@
 
 namespace App\Security;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,10 +27,14 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
     public const LOGIN_ROUTE = 'app_login';
 
     private UrlGeneratorInterface $urlGenerator;
+    private JWTTokenManagerInterface $JWTTokenManager;
+    private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(UrlGeneratorInterface $urlGenerator, JWTTokenManagerInterface $JWTTokenManager, EventDispatcherInterface $eventDispatcher)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->JWTTokenManager = $JWTTokenManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function authenticate(Request $request): Passport
@@ -49,8 +58,12 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
-        return new RedirectResponse($this->urlGenerator->generate('app_note_index'));
+        $jwt = $this->JWTTokenManager->create($token->getUser());
+        $response = new JWTAuthenticationSuccessResponse($jwt);
+        $event = new AuthenticationSuccessEvent(['token' => $jwt], $token->getUser(), $response);
+        $this->eventDispatcher->dispatch($event, Events::AUTHENTICATION_SUCCESS);
+        $response->setData($event->getData());
+        return $response;
     }
 
     protected function getLoginUrl(Request $request): string
