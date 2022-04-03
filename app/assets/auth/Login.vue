@@ -1,5 +1,5 @@
 <template>
-  <Layout>
+  <EmptyLayout>
     <!-- Outer Row -->
     <div class="row justify-content-center">
 
@@ -25,7 +25,7 @@
                       <input type="password" v-model="password" class="form-control form-control-user"
                              id="exampleInputPassword" placeholder="Password">
                     </div>
-                    <a href="#" @click="login" class="btn btn-primary btn-user btn-block">
+                    <a @click="login" class="btn btn-primary btn-user btn-block">
                       Login
                     </a>
                   </form>
@@ -42,13 +42,13 @@
       </div>
 
     </div>
-  </Layout>
+  </EmptyLayout>
 
 </template>
 
 <script setup>
-import Layout from '../layout/Default'
-import { ref, onMounted } from 'vue'
+import EmptyLayout from '../layout/Empty'
+import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 

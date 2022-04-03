@@ -1,6 +1,5 @@
 <template>
-  <button @click="count++">Count is: {{ count }}</button>
-  <router-link to="/auth/login">Go To Login</router-link>
+
 </template>
 
 <script setup>
