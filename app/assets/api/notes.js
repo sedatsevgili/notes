@@ -9,7 +9,7 @@ export const getNotes = async (token) => {
     return notes
 }
 
-export const getNote = async (token, noteId) => {
+export const getNote = async ({token, noteId}) => {
     const { note } = await get({
         endpoint: `/notes/${noteId}`,
         token
@@ -31,7 +31,7 @@ export const updateNote = async ({token, noteId, title, content }) => {
     return note
 }
 
-export const createNote = async ({token, noteId, title, content}) => {
+export const createNote = async ({token, title, content}) => {
     const { note } = await post({
         endpoint: `/notes`,
         token,
