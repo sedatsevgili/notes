@@ -33,7 +33,7 @@ export const updateNote = async ({token, noteId, title, content }) => {
 
 export const createNote = async ({token, title, content}) => {
     const { note } = await post({
-        endpoint: `/notes`,
+        endpoint: `/notes/`,
         token,
         body: {
             title,

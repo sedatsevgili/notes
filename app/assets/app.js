@@ -16,11 +16,13 @@ import store from './store';
 import Index from './Index';
 import Login from './auth/Login';
 import Register from './auth/Register';
+import AddNote from './notes/Add';
 
 const routes = [
     {path: '/', component: Index, meta: {requiresAuth: true}},
     {path: '/auth/login', component: Login},
-    {path: '/auth/register', component: Register}
+    {path: '/auth/register', component: Register},
+    {path: '/notes/add', component: AddNote, meta: {requiresAuth: false}}
 ]
 
 const router = createRouter({
