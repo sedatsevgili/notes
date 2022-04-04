@@ -55,8 +55,8 @@ import { useRouter } from 'vue-router'
 const store = useStore()
 const router = useRouter()
 
-const email = ref('iokon@lindgren.com')
-const password = ref('iokon@lindgren.com')
+const email = ref('')
+const password = ref('')
 
 const login = async () => {
   try {
