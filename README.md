@@ -1,11 +1,15 @@
 # Setup
  * Run this: `docker-compose up -d --build`
- * Run `composer install --no-interaction` to install Symfony packages
- * Run `yarn install` to install assets
- * To set up db, first login to php container with `docker-compose exec php /bin/bash`. Then run these sequentially:
-   * `symfony console doctrine:database:create`
-   * `symfony console doctrine:migrations:migrate`
-   * `symfony console doctrine:fixtures:load` to load fixtures. Passwords will be same with emails for created users by fixtures.
+ * Login to php container with running `docker-compose exec php /bin/bash`.
+ * In the php container:
+   * Run `composer install --no-interaction` to install Symfony packages
+   * Run these sequentially to build db
+     * `symfony console doctrine:database:create`
+     * `symfony console doctrine:migrations:migrate` with confirmation.
+     * `symfony console doctrine:fixtures:load` to load fixtures. Passwords will be same with emails for created users by fixtures.
+   * Run `yarn` to install assets
+   * Run `yarn build` to build Vue app
+ * Open http://127.0.0.1:8080/ to test the app
 
 # Connecting to Database
  * Run `doctrine-compose exec database /bin/bash` to login to the db container.
