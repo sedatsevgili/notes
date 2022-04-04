@@ -6,6 +6,7 @@ use App\Entity\Note;
 use App\Form\NoteType;
 use App\Repository\NoteRepository;
 use App\Security\Voter\NoteVoter;
+use App\Service\Form\ErrorSerializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,7 +28,7 @@ class NoteController extends AbstractController
     }
 
     #[Route('/', name: 'app_note_new', methods: ['POST'])]
-    public function new(Request $request, NoteRepository $noteRepository): Response
+    public function new(Request $request, NoteRepository $noteRepository, ErrorSerializer $formErrorSerializer): Response
     {
         $note = new Note();
         $form = $this->createForm(NoteType::class, $note);
@@ -40,7 +41,7 @@ class NoteController extends AbstractController
         }
 
         return new JsonResponse([
-            'errors' => $this->getErrorsFromForm($form)
+            'errors' => $formErrorSerializer->getErrorsFromForm($form)
         ], Response::HTTP_BAD_REQUEST);
     }
 
@@ -53,7 +54,7 @@ class NoteController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_note_edit', methods: ['PUT'])]
-    public function edit(Request $request, Note $note, NoteRepository $noteRepository): Response
+    public function edit(Request $request, Note $note, NoteRepository $noteRepository, ErrorSerializer $formErrorSerializer): Response
     {
         $this->denyAccessUnlessGranted(NoteVoter::EDIT, $note);
 
@@ -66,7 +67,7 @@ class NoteController extends AbstractController
         }
 
         return new JsonResponse([
-            'errors' => $this->getErrorsFromForm($form)
+            'errors' => $formErrorSerializer->getErrorsFromForm($form)
         ], Response::HTTP_BAD_REQUEST);
     }
 
@@ -80,21 +81,5 @@ class NoteController extends AbstractController
         return new JsonResponse([], Response::HTTP_OK);
     }
 
-
-    private function getErrorsFromForm(FormInterface $form)
-    {
-        $errors = array();
-        foreach ($form->getErrors() as $error) {
-            $errors[] = $error->getMessage();
-        }
-        foreach ($form->all() as $childForm) {
-            if ($childForm instanceof FormInterface) {
-                if ($childErrors = $this->getErrorsFromForm($childForm)) {
-                    $errors[$childForm->getName()] = $childErrors;
-                }
-            }
-        }
-        return $errors;
-    }
 
 }
