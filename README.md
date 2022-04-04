@@ -8,7 +8,7 @@
      * `symfony console doctrine:migrations:migrate` with confirmation.
      * `symfony console doctrine:fixtures:load` to load fixtures. Passwords will be same with emails for created users by fixtures.
    * Run `yarn` to install assets
-   * Run `yarn build` to build Vue app
+   * Run `yarn dev` to build Vue app
  * Open http://127.0.0.1:8080/ to test the app
 
 # Connecting to Database
