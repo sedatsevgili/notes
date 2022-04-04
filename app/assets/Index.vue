@@ -2,6 +2,16 @@
   <DefaultLayout>
     <template v-slot:content>
 
+      <Modal
+        v-if="isDeleteModalOpen"
+        title="Confirm to delete"
+        body="Are you sure to delete the note?"
+        action-button-class="btn btn-danger"
+        action-button-text="Delete"
+        :action="deleteNote"
+        :onClose="closeDialog"
+        />
+
       <h1 class="h3 mb-2 text-gray-800">Notes</h1>
 
       <div class="card shadow mb-4">
@@ -28,6 +38,9 @@
                   <router-link :to="{name: 'EditNote', params: {noteId: note.id}}">
                     <i class="fas fa-fw fa-edit"></i>
                   </router-link>
+                  <a href="#" class="link-danger" @click="askToDelete(note.id)">
+                    <i class="fas fa-fw fa-trash"></i>
+                  </a>
                 </td>
               </tr>
               </tbody>
@@ -40,10 +53,11 @@
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 
 import DefaultLayout from './layout/Default'
+import Modal from './components/Modal'
 
 const store = useStore()
 
@@ -53,6 +67,24 @@ const notes = computed(() => store.getters.notes)
 onMounted(() => {
   store.dispatch('getNotes')
 })
+
+const isDeleteModalOpen = ref(false)
+const idOfNoteToDelete = ref(null)
+
+const askToDelete = (noteId) => {
+  idOfNoteToDelete.value = noteId
+  isDeleteModalOpen.value = true
+}
+
+const deleteNote = async () => {
+  await store.dispatch('deleteNote', {noteId: idOfNoteToDelete.value})
+  closeDialog()
+}
+
+const closeDialog = () => {
+  isDeleteModalOpen.value = false
+  idOfNoteToDelete.value = null
+}
 </script>
 
 <style scoped>
